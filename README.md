@@ -147,7 +147,7 @@ Engage with other accessibility enthusiasts and experts.
 
 ## 🏗 Project Structure
 
-```
+\`\`\`
 a11y-helper/
 ├── app/
 │   ├── components/
@@ -184,7 +184,7 @@ a11y-helper/
 ├── tailwind.config.js
 ├── tsconfig.json
 └── package.json
-```
+\`\`\`
 
 ## 🚀 Getting Started
 

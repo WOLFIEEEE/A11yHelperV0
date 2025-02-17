@@ -66,10 +66,10 @@
     "vue-router": "latest",
     "framer-motion": "latest",
     "chroma-js": "latest",
-    "cheerio": "latest",
     "fs": "latest",
     "path": "latest",
     "@vercel/analytics": "latest",
+    "cheerio": "latest",
     "react-syntax-highlighter": "latest"
   },
   "devDependencies": {

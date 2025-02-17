@@ -17,13 +17,13 @@ export default function InteractiveDemo() {
   const [fontSize, setFontSize] = useState(16)
 
   return (
-    <Card className="max-w-3xl mx-auto">
+    <Card className="w-full max-w-3xl mx-auto">
       <CardHeader>
-        <CardTitle>Interactive Accessibility Demos</CardTitle>
+        <CardTitle className="text-xl sm:text-2xl">Interactive Accessibility Demos</CardTitle>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="visual" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-4">
             <TabsTrigger value="visual">Visual</TabsTrigger>
             <TabsTrigger value="keyboard">Keyboard</TabsTrigger>
             <TabsTrigger value="screenreader">Screen Reader</TabsTrigger>
@@ -32,17 +32,21 @@ export default function InteractiveDemo() {
           <TabsContent value="visual">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label htmlFor="high-contrast">High Contrast</Label>
+                <Label htmlFor="high-contrast" className="text-sm sm:text-base">
+                  High Contrast
+                </Label>
                 <Switch id="high-contrast" checked={highContrast} onCheckedChange={setHighContrast} />
               </div>
               <div className="flex items-center justify-between">
-                <Label htmlFor="large-text">Large Text</Label>
+                <Label htmlFor="large-text" className="text-sm sm:text-base">
+                  Large Text
+                </Label>
                 <Switch id="large-text" checked={largeText} onCheckedChange={setLargeText} />
               </div>
               <div
                 className={`p-4 rounded-md transition-all ${
                   highContrast ? "bg-black text-white" : "bg-gray-100 text-black"
-                } ${largeText ? "text-xl" : "text-base"}`}
+                } ${largeText ? "text-lg sm:text-xl" : "text-sm sm:text-base"}`}
               >
                 <p className="mb-4">This text demonstrates high contrast and large text options.</p>
                 <Button>Sample Button</Button>
@@ -52,7 +56,9 @@ export default function InteractiveDemo() {
           <TabsContent value="keyboard">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label htmlFor="keyboard-focus">Enhanced Keyboard Focus</Label>
+                <Label htmlFor="keyboard-focus" className="text-sm sm:text-base">
+                  Enhanced Keyboard Focus
+                </Label>
                 <Switch id="keyboard-focus" checked={keyboardFocus} onCheckedChange={setKeyboardFocus} />
               </div>
               <div className="space-y-2">
@@ -82,12 +88,14 @@ export default function InteractiveDemo() {
                   Submit
                 </Button>
               </div>
-              <p>Try navigating the form using your keyboard with Tab and Shift+Tab.</p>
+              <p className="text-xs sm:text-sm">Try navigating the form using your keyboard with Tab and Shift+Tab.</p>
             </div>
           </TabsContent>
           <TabsContent value="screenreader">
             <div className="space-y-4">
-              <Label htmlFor="alt-text">Enter alt text for the image:</Label>
+              <Label htmlFor="alt-text" className="text-sm sm:text-base">
+                Enter alt text for the image:
+              </Label>
               <Input
                 id="alt-text"
                 value={altText}
@@ -95,14 +103,22 @@ export default function InteractiveDemo() {
                 placeholder="Describe the image"
               />
               <div className="border p-4 rounded-md">
-                <img src="/placeholder.svg" alt={altText || "Placeholder image"} width="200" height="200" />
+                <img
+                  src="/placeholder.svg"
+                  alt={altText || "Placeholder image"}
+                  width="200"
+                  height="200"
+                  className="max-w-full h-auto"
+                />
               </div>
-              <p>Use a screen reader to hear how the alt text describes the image.</p>
+              <p className="text-xs sm:text-sm">Use a screen reader to hear how the alt text describes the image.</p>
             </div>
           </TabsContent>
           <TabsContent value="cognitive">
             <div className="space-y-4">
-              <Label htmlFor="font-size">Adjust Font Size</Label>
+              <Label htmlFor="font-size" className="text-sm sm:text-base">
+                Adjust Font Size
+              </Label>
               <Slider
                 id="font-size"
                 min={12}
@@ -112,8 +128,10 @@ export default function InteractiveDemo() {
                 onValueChange={(value) => setFontSize(value[0])}
               />
               <div style={{ fontSize: `${fontSize}px` }}>
-                <p>This text can be adjusted for easier reading. Current size: {fontSize}px</p>
-                <p>Larger text can help users with cognitive disabilities or visual impairments.</p>
+                <p className="mb-2">This text can be adjusted for easier reading. Current size: {fontSize}px</p>
+                <p className="text-xs sm:text-sm">
+                  Larger text can help users with cognitive disabilities or visual impairments.
+                </p>
               </div>
             </div>
           </TabsContent>

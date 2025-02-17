@@ -93,12 +93,14 @@ export default function AccessibilityChecker() {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Quick Accessibility Check</CardTitle>
-        <CardDescription>Enter your website URL to get an instant accessibility analysis</CardDescription>
+        <CardTitle className="text-xl sm:text-2xl">Quick Accessibility Check</CardTitle>
+        <CardDescription className="text-sm sm:text-base">
+          Enter your website URL to get an instant accessibility analysis
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex space-x-2">
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <Input
               type="url"
               placeholder="https://example.com"
@@ -106,8 +108,9 @@ export default function AccessibilityChecker() {
               onChange={(e) => setUrl(e.target.value)}
               required
               aria-label="Website URL"
+              className="flex-grow"
             />
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="w-full sm:w-auto">
               {loading ? "Analyzing..." : "Check Now"}
             </Button>
           </div>
@@ -128,30 +131,32 @@ export default function AccessibilityChecker() {
         {result && (
           <div className="mt-8 space-y-6">
             <div className="text-center">
-              <h3 className="text-2xl font-bold mb-2">Accessibility Score</h3>
-              <p className={`text-5xl font-bold ${getScoreColor(result.score)}`}>{result.score}%</p>
+              <h3 className="text-xl sm:text-2xl font-bold mb-2">Accessibility Score</h3>
+              <p className={`text-4xl sm:text-5xl font-bold ${getScoreColor(result.score)}`}>{result.score}%</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Based on {result.issuesCount} issue{result.issuesCount !== 1 ? "s" : ""} found
               </p>
             </div>
 
             <div>
-              <h4 className="text-xl font-semibold mb-4">Top Issues Found</h4>
+              <h4 className="text-lg sm:text-xl font-semibold mb-4">Top Issues Found</h4>
               <div className="space-y-2">
                 {result.issues.slice(0, 5).map((issue, index) => (
                   <div key={index} className="flex items-start space-x-2 p-2 bg-muted rounded-md">
-                    <div className="mt-1">
+                    <div className="mt-1 flex-shrink-0">
                       {issue.count > 0 ? (
                         <XCircle className={`w-5 h-5 ${impactColors[issue.impact]} text-white rounded-full`} />
                       ) : (
                         <CheckCircle className="w-5 h-5 text-green-500" />
                       )}
                     </div>
-                    <div>
-                      <p className="font-medium">{issue.type}</p>
-                      <div className="flex items-center space-x-2">
-                        <Badge className={`${impactColors[issue.impact]} text-white`}>{issue.impact}</Badge>
-                        <p className="text-sm text-muted-foreground">Count: {issue.count}</p>
+                    <div className="flex-grow">
+                      <p className="font-medium text-sm sm:text-base">{issue.type}</p>
+                      <div className="flex flex-wrap items-center space-x-2">
+                        <Badge className={`${impactColors[issue.impact]} text-white text-xs sm:text-sm`}>
+                          {issue.impact}
+                        </Badge>
+                        <p className="text-xs sm:text-sm text-muted-foreground">Count: {issue.count}</p>
                       </div>
                     </div>
                   </div>
@@ -160,11 +165,11 @@ export default function AccessibilityChecker() {
             </div>
 
             <div className="bg-muted p-4 rounded-md">
-              <h4 className="text-lg font-semibold mb-2">Understanding Your Score</h4>
-              <p className="text-sm mb-2">
+              <h4 className="text-base sm:text-lg font-semibold mb-2">Understanding Your Score</h4>
+              <p className="text-xs sm:text-sm mb-2">
                 Your accessibility score is calculated based on the number and severity of issues found:
               </p>
-              <ul className="list-disc list-inside text-sm space-y-1">
+              <ul className="list-disc list-inside text-xs sm:text-sm space-y-1">
                 <li>90-100: Excellent - Minor improvements may be needed</li>
                 <li>70-89: Good - Some important issues need addressing</li>
                 <li>50-69: Fair - Significant accessibility barriers present</li>
@@ -172,7 +177,7 @@ export default function AccessibilityChecker() {
               </ul>
             </div>
 
-            <Button asChild>
+            <Button asChild className="w-full sm:w-auto">
               <Link href={`/explore-issues?url=${encodeURIComponent(url)}`}>
                 Explore Issues <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -180,20 +185,22 @@ export default function AccessibilityChecker() {
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex flex-col sm:flex-row justify-between space-y-2 sm:space-y-0">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto">
                 What We Check
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>We check for common issues like missing alt text, color contrast, and keyboard accessibility.</p>
+              <p className="text-xs sm:text-sm">
+                We check for common issues like missing alt text, color contrast, and keyboard accessibility.
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <Button asChild>
+        <Button asChild className="w-full sm:w-auto">
           <Link href="/accessibility-issues">
             Learn About Common Issues <ArrowRight className="ml-2 h-4 w-4" />
           </Link>

@@ -1,312 +1,197 @@
-"use client"
-
-import type { Metadata } from "next"
-import Link from "next/link"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CodeBlock } from "@/components/CodeBlock"
-import { SaveIcon, Loader2 } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { CodeBlock } from "../CodeBlock"
+import { ChevronRight, Mail, Menu } from "lucide-react"
 
-export const metadata: Metadata = {
-  title: "Accessible Buttons - A11yHelper",
-  description:
-    "Learn how to create fully accessible and customizable buttons for various use cases, following WCAG guidelines and best practices.",
-  keywords: [
-    "accessible buttons",
-    "WCAG compliant buttons",
-    "keyboard accessible buttons",
-    "button best practices",
-    "aria buttons",
-  ],
+const ButtonsPage = () => {
+  const codeExample = `
+import React from 'react'
+import { Button } from "@/components/ui/button"
+import { ChevronRight, Mail, Menu } from 'lucide-react'
+
+export const AccessibleButtons = () => {
+  return (
+    <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+      <Button>Default Button</Button>
+      <Button variant="outline">
+        <Mail className="mr-2 h-4 w-4" /> Email Us
+      </Button>
+      <Button variant="ghost" size="sm">
+        Learn More <ChevronRight className="ml-2 h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
+        aria-label="Open menu"
+      >
+        <Menu className="h-4 w-4" />
+      </Button>
+    </div>
+  )
 }
-
-const frameworks = [
-  { name: "React", language: "tsx" },
-  { name: "Vue", language: "html" },
-  { name: "Angular", language: "typescript" },
-  { name: "Svelte", language: "html" },
-]
-
-export default function AccessibleButtonsPage() {
-  const [framework, setFramework] = useState(frameworks[0])
-  const [isLoading, setIsLoading] = useState(false)
-
-  const handleClick = () => {
-    setIsLoading(true)
-    setTimeout(() => setIsLoading(false), 2000)
-  }
+`
 
   return (
-    <div className="container py-12 md:py-24 lg:py-32 max-w-5xl mx-auto">
-      <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl mb-8 text-center">
-        Accessible Buttons
-      </h1>
-      <p className="text-xl mb-12 text-center max-w-3xl mx-auto">
-        Discover how to create fully accessible and customizable buttons that enhance user experience and comply with
-        WCAG guidelines.
-      </p>
-
-      <Card className="mb-12">
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <h1 className="text-3xl font-bold mb-6">Accessible Buttons</h1>
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="examples">Examples</TabsTrigger>
+          <TabsTrigger value="code">Code</TabsTrigger>
+        </TabsList>
+        <TabsContent value="overview">
+          <Card>
+            <CardHeader>
+              <CardTitle>Accessible Button Design</CardTitle>
+              <CardDescription>Key features for creating accessible buttons</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p>
+                Accessible buttons are crucial for ensuring all users can interact with your website effectively. Here
+                are the key features:
+              </p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>
+                  Use semantic HTML: Prefer <code>&lt;button&gt;</code> elements for clickable buttons.
+                </li>
+                <li>Provide clear labels: Use descriptive text that explains the button's action.</li>
+                <li>Ensure keyboard accessibility: Buttons should be focusable and operable with a keyboard.</li>
+                <li>
+                  Maintain sufficient color contrast: Text and background colors should have a contrast ratio of at
+                  least 4.5:1.
+                </li>
+                <li>
+                  Use ARIA attributes when necessary: For example, <code>aria-label</code> for icon-only buttons.
+                </li>
+                <li>Indicate focus: Provide a visible focus indicator for keyboard users.</li>
+                <li>Consider button size: Ensure buttons are large enough to be easily clickable on touch devices.</li>
+              </ul>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="examples">
+          <Card>
+            <CardHeader>
+              <CardTitle>Button Examples</CardTitle>
+              <CardDescription>Interactive examples of accessible buttons</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+                <Button>Default Button</Button>
+                <Button variant="outline">
+                  <Mail className="mr-2 h-4 w-4" /> Email Us
+                </Button>
+                <Button variant="ghost" size="sm">
+                  Learn More <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon" aria-label="Open menu">
+                  <Menu className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="space-y-2">
+                <p className="font-semibold">Key Accessibility Features:</p>
+                <ul className="list-disc pl-6 space-y-1">
+                  <li>Clear, descriptive labels</li>
+                  <li>Keyboard focusable and operable</li>
+                  <li>Visible focus indicators</li>
+                  <li>Appropriate use of ARIA labels for icon-only buttons</li>
+                  <li>Sufficient size for touch interactions</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="code">
+          <Card>
+            <CardHeader>
+              <CardTitle>Code Example</CardTitle>
+              <CardDescription>Accessible button implementation</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CodeBlock code={codeExample} language="tsx" />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+      <Card className="mt-8">
         <CardHeader>
-          <CardTitle className="text-2xl">Interactive Demo</CardTitle>
-          <CardDescription>Experience fully accessible buttons in action</CardDescription>
+          <CardTitle>Accessibility Considerations</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex flex-wrap gap-4">
-            <Button onClick={handleClick} disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait
-                </>
-              ) : (
-                "Click me"
-              )}
-            </Button>
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
-            <Button disabled>Disabled</Button>
-            <Button aria-label="Save document">
-              <SaveIcon className="w-4 h-4 mr-2" />
-              Save
-            </Button>
-          </div>
-          <p className="text-sm text-gray-500 mt-4">
-            Try using these buttons with your keyboard (Tab to focus, Enter or Space to activate) or a screen reader to
-            experience their accessibility features.
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-12">
-        <CardHeader>
-          <CardTitle className="text-2xl">Code Example</CardTitle>
-          <CardDescription>View implementation in different frameworks</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue={framework.name} className="mb-6">
-            <TabsList>
-              {frameworks.map((fw) => (
-                <TabsTrigger key={fw.name} value={fw.name} onClick={() => setFramework(fw)}>
-                  {fw.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            {frameworks.map((fw) => (
-              <TabsContent key={fw.name} value={fw.name}>
-                <CodeBlock code={getCodeForFramework(fw.name)} language={fw.language} />
-              </TabsContent>
-            ))}
-          </Tabs>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-12">
-        <CardHeader>
-          <CardTitle className="text-2xl">Key Accessibility Features</CardTitle>
-          <CardDescription>Essential aspects for creating accessible buttons</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="list-disc list-inside space-y-2">
+          <p>When implementing accessible buttons, consider the following:</p>
+          <ul className="list-disc pl-6 space-y-2">
             <li>
-              Use semantic HTML elements (<code>&lt;button&gt;</code> for actions, <code>&lt;a&gt;</code> for links)
+              <strong>Semantic HTML:</strong> Use <code>&lt;button&gt;</code> elements for actions that don't navigate
+              to a new page. For links, use <code>&lt;a&gt;</code> elements styled as buttons.
             </li>
-            <li>Provide clear, descriptive, and concise text labels</li>
-            <li>Ensure sufficient color contrast (4.5:1 for normal text, 3:1 for large text)</li>
-            <li>Make buttons keyboard accessible and operable</li>
-            <li>Use ARIA attributes when necessary (e.g., for custom buttons or to provide additional context)</li>
-            <li>Ensure proper focus management and visible focus indicators</li>
-            <li>Provide feedback for button states (hover, focus, active, disabled)</li>
+            <li>
+              <strong>Keyboard Accessibility:</strong> Ensure buttons can be focused and activated using the keyboard
+              (Tab to focus, Enter or Space to activate).
+            </li>
+            <li>
+              <strong>Focus Indicators:</strong> Provide clear visual focus indicators. Don't remove the default focus
+              outline unless you're replacing it with a clearly visible alternative.
+            </li>
+            <li>
+              <strong>Color Contrast:</strong> Maintain a color contrast ratio of at least 4.5:1 for normal text and 3:1
+              for large text between the button text and its background.
+            </li>
+            <li>
+              <strong>Button Text:</strong> Use clear, action-oriented text that describes what the button does.
+            </li>
+            <li>
+              <strong>Icon-only Buttons:</strong> Always provide an accessible name using <code>aria-label</code> or{" "}
+              <code>aria-labelledby</code> for buttons that only contain icons.
+            </li>
+            <li>
+              <strong>Touch Target Size:</strong> Ensure buttons are at least 44x44 pixels on touch devices to
+              accommodate users with motor impairments.
+            </li>
+            <li>
+              <strong>Button State:</strong> Clearly indicate button states (hover, focus, active, disabled) through
+              visual changes.
+            </li>
+            <li>
+              <strong>Loading State:</strong> If a button triggers an action that takes time, indicate the loading state
+              visually and via ARIA attributes.
+            </li>
+            <li>
+              <strong>Grouping Buttons:</strong> Use <code>role="group"</code> and <code>aria-label</code> to group
+              related buttons and provide a description for the group.
+            </li>
           </ul>
         </CardContent>
       </Card>
-
-      <Card>
+      <Card className="mt-8">
         <CardHeader>
-          <CardTitle className="text-2xl">Testing Accessibility</CardTitle>
-          <CardDescription>Ensure your buttons meet accessibility standards</CardDescription>
+          <CardTitle>Testing Accessibility</CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="mb-4">To ensure your buttons are fully accessible, perform the following tests:</p>
-          <ul className="list-disc list-inside space-y-2">
-            <li>Keyboard testing: Verify that all buttons can be focused and activated using only the keyboard.</li>
+        <CardContent className="space-y-4">
+          <p>To ensure your buttons are fully accessible, perform the following tests:</p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>Keyboard Navigation: Verify that all buttons can be focused and activated using only the keyboard.</li>
             <li>
-              Screen reader testing: Use popular screen readers (e.g., NVDA, JAWS, VoiceOver) to ensure buttons are
-              properly announced and provide sufficient context.
+              Screen Reader Testing: Use screen readers (like NVDA, JAWS, or VoiceOver) to ensure buttons are properly
+              announced and can be activated.
             </li>
             <li>
-              Color contrast: Use tools like the WebAIM Color Contrast Checker to verify sufficient contrast ratios.
+              Color Contrast: Use tools like the WebAIM Color Contrast Checker to verify sufficient contrast ratios.
             </li>
-            <li>Resize text: Ensure buttons remain functional and legible when text is resized up to 200%.</li>
-            <li>Touch target size: Verify that buttons meet the minimum size requirements on mobile devices.</li>
-            <li>Automated testing: Use tools like axe-core or WAVE to catch common accessibility issues.</li>
+            <li>
+              Touch Target Size: Ensure buttons are large enough for comfortable touch interaction on mobile devices.
+            </li>
+            <li>Automated Testing: Use tools like axe-core or WAVE to catch common accessibility issues.</li>
+            <li>
+              User Testing: Conduct usability tests with users who have various disabilities to get real-world feedback.
+            </li>
           </ul>
         </CardContent>
       </Card>
-
-      <div className="text-center mt-12">
-        <Button asChild size="lg">
-          <Link href="/components">Back to Components</Link>
-        </Button>
-      </div>
     </div>
   )
 }
 
-function getCodeForFramework(framework: string) {
-  switch (framework) {
-    case "React":
-      return `
-import React, { useState } from 'react';
-import { Button } from './Button';
-import { SaveIcon, Loader2Icon } from 'lucide-react';
-
-export function AccessibleButtons() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleClick = () => {
-    setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 2000);
-  };
-
-  return (
-    <div className="space-y-4">
-      <Button onClick={handleClick} disabled={isLoading}>
-        {isLoading ? (
-          <>
-            <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-            Please wait
-          </>
-        ) : (
-          "Click me"
-        )}
-      </Button>
-      <Button variant="secondary">Secondary</Button>
-      <Button variant="outline">Outline</Button>
-      <Button variant="ghost">Ghost</Button>
-      <Button disabled>Disabled</Button>
-      <Button aria-label="Save document">
-        <SaveIcon className="w-4 h-4 mr-2" />
-        Save
-      </Button>
-    </div>
-  );
-}
-      `
-    case "Vue":
-      return `
-<template>
-  <div class="space-y-4">
-    <button @click="handleClick" :disabled="isLoading" class="btn btn-primary">
-      <template v-if="isLoading">
-        <loader-2-icon class="mr-2 h-4 w-4 animate-spin" />
-        Please wait
-      </template>
-      <template v-else>
-        Click me
-      </template>
-    </button>
-    <button class="btn btn-secondary">Secondary</button>
-    <button class="btn btn-outline">Outline</button>
-    <button class="btn btn-ghost">Ghost</button>
-    <button class="btn" disabled>Disabled</button>
-    <button class="btn btn-primary" aria-label="Save document">
-      <save-icon class="w-4 h-4 mr-2" />
-      Save
-    </button>
-  </div>
-</template>
-
-<script>
-import { ref } from 'vue';
-import { SaveIcon, Loader2Icon } from 'lucide-vue';
-
-export default {
-  components: { SaveIcon, Loader2Icon },
-  setup() {
-    const isLoading = ref(false);
-
-    const handleClick = () => {
-      isLoading.value = true;
-      setTimeout(() => isLoading.value = false, 2000);
-    };
-
-    return { isLoading, handleClick };
-  }
-};
-</script>
-      `
-    case "Angular":
-      return `
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-accessible-buttons',
-  template: \`
-    <div class="space-y-4">
-      <button (click)="handleClick()" [disabled]="isLoading" class="btn btn-primary">
-        <ng-container *ngIf="isLoading; else notLoading">
-          <svg class="mr-2 h-4 w-4 animate-spin" ... ></svg>
-          Please wait
-        </ng-container>
-        <ng-template #notLoading>Click me</ng-template>
-      </button>
-      <button class="btn btn-secondary">Secondary</button>
-      <button class="btn btn-outline">Outline</button>
-      <button class="btn btn-ghost">Ghost</button>
-      <button class="btn" disabled>Disabled</button>
-      <button class="btn btn-primary" aria-label="Save document">
-        <svg class="w-4 h-4 mr-2" ... ></svg>
-        Save
-      </button>
-    </div>
-  \`
-})
-export class AccessibleButtonsComponent {
-  isLoading = false;
-
-  handleClick() {
-    this.isLoading = true;
-    setTimeout(() => this.isLoading = false, 2000);
-  }
-}
-      `
-    case "Svelte":
-      return `
-<script>
-  import { SaveIcon, Loader2Icon } from 'lucide-svelte';
-  let isLoading = false;
-
-  function handleClick() {
-    isLoading = true;
-    setTimeout(() => isLoading = false, 2000);
-  }
-</script>
-
-<div class="space-y-4">
-  <button on:click={handleClick} disabled={isLoading} class="btn btn-primary">
-    {#if isLoading}
-      <Loader2Icon class="mr-2 h-4 w-4 animate-spin" />
-      Please wait
-    {:else}
-      Click me
-    {/if}
-  </button>
-  <button class="btn btn-secondary">Secondary</button>
-  <button class="btn btn-outline">Outline</button>
-  <button class="btn btn-ghost">Ghost</button>
-  <button class="btn" disabled>Disabled</button>
-  <button class="btn btn-primary" aria-label="Save document">
-    <SaveIcon class="w-4 h-4 mr-2" />
-    Save
-  </button>
-</div>
-      `
-    default:
-      return "Code example not available for this framework."
-  }
-}
+export default ButtonsPage
 
