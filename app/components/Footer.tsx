@@ -1,8 +1,7 @@
 import Link from "next/link"
-import { Facebook, Twitter, Instagram, Linkedin, ArrowRight } from "lucide-react"
+import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react"
 import React from "react"
 import Logo from "./Logo"
-import { Button } from "@/components/ui/button"
 
 const Footer = () => {
   return (
@@ -80,23 +79,6 @@ const Footer = () => {
                 Terms
               </Link>
             </div>
-          </div>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Button size="lg" asChild>
-              <Link href="/get-started">
-                Get Started <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/contact">
-                Contact Us <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="/demo">
-                Request Demo <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
           </div>
         </div>
       </footer>
