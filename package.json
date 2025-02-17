@@ -69,7 +69,8 @@
     "cheerio": "latest",
     "fs": "latest",
     "path": "latest",
-    "@vercel/analytics": "latest"
+    "@vercel/analytics": "latest",
+    "react-syntax-highlighter": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

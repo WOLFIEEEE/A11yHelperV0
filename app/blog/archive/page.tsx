@@ -2,25 +2,20 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Web Accessibility Blog - A11yHelper",
-  description:
-    "Stay up-to-date with the latest web accessibility trends, WCAG guidelines, and best practices for creating inclusive digital experiences.",
+  title: "Blog Archive - A11yHelper",
+  description: "Browse our complete collection of web accessibility articles, tips, and best practices.",
   keywords: [
-    "web accessibility blog",
-    "WCAG updates",
-    "accessibility best practices",
+    "web accessibility archive",
+    "a11y articles",
+    "accessibility resources",
+    "WCAG guidelines",
     "inclusive design",
-    "a11y tips",
-    "digital inclusion",
-    "assistive technology",
-    "accessibility testing",
   ],
 }
 
-const blogPosts = [
+const allBlogPosts = [
   {
     title: "Understanding WCAG 2.2: What's New and How to Prepare",
     description:
@@ -68,43 +63,66 @@ const blogPosts = [
     readTime: "11 min read",
     slug: "mobile-accessibility-best-practices",
   },
+  {
+    title: "Keyboard Navigation: Ensuring Full Accessibility",
+    description: "Learn how to make your website fully navigable by keyboard, improving accessibility for all users.",
+    date: "2023-04-28",
+    readTime: "8 min read",
+    slug: "keyboard-navigation-accessibility",
+  },
+  {
+    title: "Accessible Rich Internet Applications (ARIA): A Comprehensive Guide",
+    description: "Dive into ARIA attributes and learn how to use them effectively to enhance web accessibility.",
+    date: "2023-04-15",
+    readTime: "12 min read",
+    slug: "aria-comprehensive-guide",
+  },
+  {
+    title: "The Business Case for Web Accessibility",
+    description:
+      "Explore the economic, legal, and social benefits of prioritizing web accessibility in your organization.",
+    date: "2023-04-01",
+    readTime: "9 min read",
+    slug: "business-case-web-accessibility",
+  },
+  {
+    title: "Automated Accessibility Testing: Tools and Best Practices",
+    description:
+      "Discover the best tools and methodologies for integrating automated accessibility testing into your development workflow.",
+    date: "2023-03-20",
+    readTime: "10 min read",
+    slug: "automated-accessibility-testing",
+  },
 ]
 
-export default function BlogPage() {
+export default function BlogArchivePage() {
   return (
     <div className="container py-12 md:py-24 lg:py-32">
-      <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">A11yHelper Blog</h1>
+      <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">Blog Archive</h1>
       <p className="text-xl text-center mb-12 max-w-3xl mx-auto">
-        Stay up-to-date with the latest accessibility trends, tips, and best practices. Our blog covers everything from
-        WCAG guidelines to practical implementation strategies.
+        Browse our complete collection of articles on web accessibility, WCAG guidelines, and inclusive design.
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        {blogPosts.map((post, index) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {allBlogPosts.map((post, index) => (
           <Card key={index} className="flex flex-col h-full">
             <CardHeader>
-              <CardTitle className="text-2xl">{post.title}</CardTitle>
+              <CardTitle className="text-xl">{post.title}</CardTitle>
               <CardDescription>
                 {post.date} • {post.readTime}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
-              <p className="mb-4">{post.description}</p>
-              <Button asChild className="mt-auto">
-                <Link href={`/blog/${post.slug}`}>Read More</Link>
+              <p className="mb-4 text-sm">{post.description}</p>
+              <Button asChild className="mt-auto" variant="outline">
+                <Link href={`/blog/${post.slug}`}>Read Article</Link>
               </Button>
             </CardContent>
           </Card>
         ))}
       </div>
-      <div className="flex justify-between items-center mt-12">
-        <Button variant="outline" disabled>
-          <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-        </Button>
-        <Button variant="outline" asChild>
-          <Link href="/blog/archive">View All Posts</Link>
-        </Button>
-        <Button variant="outline" disabled>
-          Next <ChevronRight className="ml-2 h-4 w-4" />
+      <div className="text-center mt-12">
+        <Button asChild size="lg">
+          <Link href="/blog">Back to Blog</Link>
         </Button>
       </div>
     </div>
