@@ -17,17 +17,25 @@ export default function InteractiveDemo() {
   const [fontSize, setFontSize] = useState(16)
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-xl sm:text-2xl">Interactive Accessibility Demos</CardTitle>
+        <CardTitle className="text-xl sm:text-2xl text-center">Interactive Accessibility Demos</CardTitle>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="visual" className="w-full">
           <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-4">
-            <TabsTrigger value="visual">Visual</TabsTrigger>
-            <TabsTrigger value="keyboard">Keyboard</TabsTrigger>
-            <TabsTrigger value="screenreader">Screen Reader</TabsTrigger>
-            <TabsTrigger value="cognitive">Cognitive</TabsTrigger>
+            <TabsTrigger value="visual" className="text-xs sm:text-sm">
+              Visual
+            </TabsTrigger>
+            <TabsTrigger value="keyboard" className="text-xs sm:text-sm">
+              Keyboard
+            </TabsTrigger>
+            <TabsTrigger value="screenreader" className="text-xs sm:text-sm">
+              Screen Reader
+            </TabsTrigger>
+            <TabsTrigger value="cognitive" className="text-xs sm:text-sm">
+              Cognitive
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="visual">
             <div className="space-y-4">
@@ -79,7 +87,7 @@ export default function InteractiveDemo() {
                   }`}
                 />
                 <Button
-                  className={`transition-all duration-200 ${
+                  className={`w-full sm:w-auto transition-all duration-200 ${
                     keyboardFocus
                       ? "focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       : "focus:ring-1 focus:ring-gray-200"
@@ -102,7 +110,7 @@ export default function InteractiveDemo() {
                 onChange={(e) => setAltText(e.target.value)}
                 placeholder="Describe the image"
               />
-              <div className="border p-4 rounded-md">
+              <div className="border p-4 rounded-md flex justify-center">
                 <img
                   src="/placeholder.svg"
                   alt={altText || "Placeholder image"}

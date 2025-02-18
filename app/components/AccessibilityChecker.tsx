@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -91,10 +90,10 @@ export default function AccessibilityChecker() {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-xl sm:text-2xl">Quick Accessibility Check</CardTitle>
-        <CardDescription className="text-sm sm:text-base">
+        <CardTitle className="text-xl sm:text-2xl text-center">Quick Accessibility Check</CardTitle>
+        <CardDescription className="text-sm sm:text-base text-center">
           Enter your website URL to get an instant accessibility analysis
         </CardDescription>
       </CardHeader>
@@ -122,7 +121,7 @@ export default function AccessibilityChecker() {
           )}
           {error && (
             <div className="flex items-center text-red-500">
-              <AlertCircle className="w-4 h-4 mr-2" />
+              <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
               <p className="text-sm">{error}</p>
             </div>
           )}
@@ -150,9 +149,9 @@ export default function AccessibilityChecker() {
                         <CheckCircle className="w-5 h-5 text-green-500" />
                       )}
                     </div>
-                    <div className="flex-grow">
-                      <p className="font-medium text-sm sm:text-base">{issue.type}</p>
-                      <div className="flex flex-wrap items-center space-x-2">
+                    <div className="flex-grow min-w-0">
+                      <p className="font-medium text-sm sm:text-base truncate">{issue.type}</p>
+                      <div className="flex flex-wrap items-center gap-2">
                         <Badge className={`${impactColors[issue.impact]} text-white text-xs sm:text-sm`}>
                           {issue.impact}
                         </Badge>
@@ -177,7 +176,7 @@ export default function AccessibilityChecker() {
               </ul>
             </div>
 
-            <Button asChild className="w-full sm:w-auto">
+            <Button asChild className="w-full">
               <Link href={`/explore-issues?url=${encodeURIComponent(url)}`}>
                 Explore Issues <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
