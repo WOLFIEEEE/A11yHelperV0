@@ -32,22 +32,23 @@ export default function WCAGTable() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch("/wcag-checklist.json")
-      .then((response) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/wcag-checklist.json")
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
-        return response.json()
-      })
-      .then((data) => {
+        const data = await response.json()
         setWcagCriteria(data)
         setLoading(false)
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error loading WCAG data:", error)
         setError("Failed to load WCAG data. Please try again later.")
         setLoading(false)
-      })
+      }
+    }
+
+    fetchData()
   }, [])
 
   const filteredAndSortedCriteria = useMemo(() => {

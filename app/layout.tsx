@@ -94,8 +94,8 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="flex-grow px-4 sm:px-6 lg:px-8 py-8 flex justify-center items-start">
-              <div className="w-full max-w-4xl">{children}</div>
+            <main className="flex-grow w-full px-4 sm:px-6 lg:px-8 py-8">
+              <div className="max-w-7xl mx-auto">{children}</div>
             </main>
             <Footer />
           </div>
