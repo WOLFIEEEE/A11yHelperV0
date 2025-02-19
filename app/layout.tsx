@@ -5,6 +5,7 @@ import Header from "./components/Header"
 import Footer from "./components/Footer"
 import { ThemeProvider } from "./components/ThemeProvider"
 import { VercelAnalytics } from "./components/VercelAnalytics"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { Metadata } from "next"
 import DevelopmentBanner from "@/components/DevelopmentBanner"
 
@@ -102,6 +103,7 @@ export default function RootLayout({
             <Footer />
           </div>
         </ThemeProvider>
+        <SpeedInsights/>
         <VercelAnalytics />
       </body>
     </html>
