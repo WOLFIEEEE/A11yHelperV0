@@ -6,20 +6,20 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { AlertCircle, CheckCircle, XCircle, ArrowRight } from "lucide-react"
+import { AlertCircle, XCircle, ArrowRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import Link from "next/link"
 
 type AccessibilityIssue = {
   type: string
-  count: number
-  impact: "minor" | "moderate" | "serious" | "critical"
-  locations: {
-    element: string
-    code: string
-    line: number
-  }[]
+  description: string
+  impact: string
+  helpUrl: string
+  nodes: Array<{
+    html: string
+    target: string[]
+  }>
 }
 
 type AccessibilityResult = {
@@ -28,7 +28,7 @@ type AccessibilityResult = {
   issues: AccessibilityIssue[]
 }
 
-const impactColors = {
+const impactColors: Record<string, string> = {
   minor: "bg-yellow-500",
   moderate: "bg-orange-500",
   serious: "bg-red-500",
@@ -62,24 +62,23 @@ export default function AccessibilityChecker() {
     try {
       const response = await fetch("/api/accessibility-check", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error("Failed to check accessibility")
+        throw new Error(data.error || `HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json()
       setResult(data)
     } catch (err) {
-      setError("An error occurred while checking accessibility. Please try again.")
+      setError(`An error occurred while checking accessibility: ${err instanceof Error ? err.message : String(err)}`)
     } finally {
       clearInterval(loadingInterval)
       setLoadingProgress(100)
-      setTimeout(() => setLoading(false), 500) // Delay to show 100% briefly
+      setTimeout(() => setLoading(false), 500)
     }
   }
 
@@ -90,16 +89,14 @@ export default function AccessibilityChecker() {
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-xl sm:text-2xl text-center">Quick Accessibility Check</CardTitle>
-        <CardDescription className="text-sm sm:text-base text-center">
-          Enter your website URL to get an instant accessibility analysis
-        </CardDescription>
+        <CardTitle>Quick Accessibility Check</CardTitle>
+        <CardDescription>Enter your website URL to get an instant accessibility analysis</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+          <div className="flex space-x-2">
             <Input
               type="url"
               placeholder="https://example.com"
@@ -107,9 +104,8 @@ export default function AccessibilityChecker() {
               onChange={(e) => setUrl(e.target.value)}
               required
               aria-label="Website URL"
-              className="flex-grow"
             />
-            <Button type="submit" disabled={loading} className="w-full sm:w-auto">
+            <Button type="submit" disabled={loading}>
               {loading ? "Analyzing..." : "Check Now"}
             </Button>
           </div>
@@ -121,7 +117,7 @@ export default function AccessibilityChecker() {
           )}
           {error && (
             <div className="flex items-center text-red-500">
-              <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
+              <AlertCircle className="w-4 h-4 mr-2" />
               <p className="text-sm">{error}</p>
             </div>
           )}
@@ -130,32 +126,39 @@ export default function AccessibilityChecker() {
         {result && (
           <div className="mt-8 space-y-6">
             <div className="text-center">
-              <h3 className="text-xl sm:text-2xl font-bold mb-2">Accessibility Score</h3>
-              <p className={`text-4xl sm:text-5xl font-bold ${getScoreColor(result.score)}`}>{result.score}%</p>
+              <h3 className="text-2xl font-bold mb-2">Accessibility Score</h3>
+              <p className={`text-5xl font-bold ${getScoreColor(result.score)}`}>{result.score}%</p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Based on {result.issuesCount} issue{result.issuesCount !== 1 ? "s" : ""} found
+                Based on {result.issuesCount} issue
+                {result.issuesCount !== 1 ? "s" : ""} found
               </p>
             </div>
 
             <div>
-              <h4 className="text-lg sm:text-xl font-semibold mb-4">Top Issues Found</h4>
+              <h4 className="text-xl font-semibold mb-4">Top Issues Found</h4>
               <div className="space-y-2">
                 {result.issues.slice(0, 5).map((issue, index) => (
                   <div key={index} className="flex items-start space-x-2 p-2 bg-muted rounded-md">
-                    <div className="mt-1 flex-shrink-0">
-                      {issue.count > 0 ? (
-                        <XCircle className={`w-5 h-5 ${impactColors[issue.impact]} text-white rounded-full`} />
-                      ) : (
-                        <CheckCircle className="w-5 h-5 text-green-500" />
-                      )}
+                    <div className="mt-1">
+                      <XCircle
+                        className={`w-5 h-5 ${impactColors[issue.impact] || "bg-gray-500"} text-white rounded-full`}
+                      />
                     </div>
-                    <div className="flex-grow min-w-0">
-                      <p className="font-medium text-sm sm:text-base truncate">{issue.type}</p>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge className={`${impactColors[issue.impact]} text-white text-xs sm:text-sm`}>
+                    <div>
+                      <p className="font-medium">{issue.type}</p>
+                      <p className="text-sm text-muted-foreground">{issue.description}</p>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <Badge className={`${impactColors[issue.impact] || "bg-gray-500"} text-white`}>
                           {issue.impact}
                         </Badge>
-                        <p className="text-xs sm:text-sm text-muted-foreground">Count: {issue.count}</p>
+                        <a
+                          href={issue.helpUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-500 hover:underline"
+                        >
+                          Learn more
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -164,11 +167,11 @@ export default function AccessibilityChecker() {
             </div>
 
             <div className="bg-muted p-4 rounded-md">
-              <h4 className="text-base sm:text-lg font-semibold mb-2">Understanding Your Score</h4>
-              <p className="text-xs sm:text-sm mb-2">
+              <h4 className="text-lg font-semibold mb-2">Understanding Your Score</h4>
+              <p className="text-sm mb-2">
                 Your accessibility score is calculated based on the number and severity of issues found:
               </p>
-              <ul className="list-disc list-inside text-xs sm:text-sm space-y-1">
+              <ul className="list-disc list-inside text-sm space-y-1">
                 <li>90-100: Excellent - Minor improvements may be needed</li>
                 <li>70-89: Good - Some important issues need addressing</li>
                 <li>50-69: Fair - Significant accessibility barriers present</li>
@@ -176,7 +179,7 @@ export default function AccessibilityChecker() {
               </ul>
             </div>
 
-            <Button asChild className="w-full">
+            <Button asChild>
               <Link href={`/explore-issues?url=${encodeURIComponent(url)}`}>
                 Explore Issues <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -184,22 +187,20 @@ export default function AccessibilityChecker() {
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col sm:flex-row justify-between space-y-2 sm:space-y-0">
+      <CardFooter className="flex justify-between">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="sm" className="w-full sm:w-auto">
+              <Button variant="outline" size="sm">
                 What We Check
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p className="text-xs sm:text-sm">
-                We check for common issues like missing alt text, color contrast, and keyboard accessibility.
-              </p>
+              <p>We use axe-core to check for a wide range of accessibility issues, including WCAG 2.1 compliance.</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <Button asChild className="w-full sm:w-auto">
+        <Button asChild>
           <Link href="/accessibility-issues">
             Learn About Common Issues <ArrowRight className="ml-2 h-4 w-4" />
           </Link>

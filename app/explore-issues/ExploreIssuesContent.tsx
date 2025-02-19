@@ -4,15 +4,16 @@ import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 type AccessibilityIssue = {
   type: string
-  count: number
+  description: string
   impact: "minor" | "moderate" | "serious" | "critical"
-  locations: {
-    element: string
-    code: string
-    line: number
+  helpUrl: string
+  nodes: {
+    html: string
+    target: string[]
   }[]
 }
 
@@ -33,7 +34,13 @@ export default function ExploreIssuesContent() {
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        const response = await fetch(`/api/accessibility-check?url=${url}`)
+        const response = await fetch("/api/accessibility-check", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url }),
+        })
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
@@ -56,40 +63,52 @@ export default function ExploreIssuesContent() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">Accessibility Issues</h2>
+      <h2 className="text-2xl font-semibold mb-4">Accessibility Issues for {url}</h2>
       {issues.length === 0 ? (
         <p>No accessibility issues found!</p>
       ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Issue Type</TableHead>
-              <TableHead>Impact</TableHead>
-              <TableHead>Count</TableHead>
-              <TableHead>Locations</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {issues.map((issue) => (
-              <TableRow key={issue.type}>
-                <TableCell>{issue.type}</TableCell>
-                <TableCell>
+        <Accordion type="single" collapsible className="w-full">
+          {issues.map((issue, index) => (
+            <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionTrigger>
+                <div className="flex items-center space-x-2">
                   <Badge className={`${impactColors[issue.impact]} text-white`}>{issue.impact}</Badge>
-                </TableCell>
-                <TableCell>{issue.count}</TableCell>
-                <TableCell>
-                  {issue.locations.map((location, index) => (
-                    <div key={index}>
-                      <p>Element: {location.element}</p>
-                      <pre>{location.code}</pre>
-                      <p>Line: {location.line}</p>
-                    </div>
-                  ))}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                  <span>{issue.type}</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-2">
+                  <p>{issue.description}</p>
+                  <a
+                    href={issue.helpUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
+                  >
+                    Learn more about this issue
+                  </a>
+                  <h4 className="font-semibold mt-4">Affected Elements:</h4>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>HTML</TableHead>
+                        <TableHead>Selector</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {issue.nodes.map((node, nodeIndex) => (
+                        <TableRow key={nodeIndex}>
+                          <TableCell>{node.html}</TableCell>
+                          <TableCell>{node.target.join(", ")}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       )}
     </div>
   )

@@ -10,7 +10,7 @@ export default function WCAGChecklistPage() {
         Explore and filter WCAG criteria from versions 2.0, 2.1, and 2.2. This comprehensive table helps you understand
         and implement web accessibility standards across all current WCAG versions.
       </p>
-      <WCAGTable />
+      <WCAGTable centerContent hideEmptyWCAGVersion />
     </div>
   )
 }

@@ -1,21 +1,253 @@
 [
   {
-    "id": 1,
-    "criteria": "1.1.1",
-    "success_criterion_title": "Non-text Content",
-    "level": "A",
-    "requirement": "Provide text alternatives for all non-text content (e.g., images, maps, art, photos, infographics, graphs).",
-    "roles": ["Content Editor", "Developer"],
-    "version": "2.0"
+    "ref_id": "1",
+    "title": "Perceivable",
+    "description": "Information and user interface components must be presentable to users in ways they can perceive.",
+    "url": "https://www.w3.org/TR/WCAG22/#perceivable",
+    "guidelines": [
+      {
+        "ref_id": "1.1",
+        "title": "Text Alternatives",
+        "description": "Provide text alternatives for any non-text content so that it can be changed into other forms people need, such as large print, braille, speech, symbols or simpler language.",
+        "url": "https://www.w3.org/TR/WCAG22/#text-alternatives",
+        "references": [
+          {
+            "title": "Understanding Guideline 1.1",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/text-alternatives.html"
+          }
+        ],
+        "success_criteria": [
+          {
+            "ref_id": "1.1.1",
+            "title": "Non-text Content",
+            "description": "All non-text content that is presented to the user has a text alternative that serves the equivalent purpose, except for the situations listed below.",
+            "url": "https://www.w3.org/TR/WCAG22/#non-text-content",
+            "level": "A",
+            "special_cases": [
+              {
+                "type": "exception",
+                "title": "Controls, Input",
+                "description": "If non-text content is a control or accepts user input, then it has a name that describes its purpose. (Refer to Guideline 4.1 for additional requirements for controls and content that accepts user input.)"
+              },
+              {
+                "type": "exception",
+                "title": "Time-based Media",
+                "description": "If non-text content is time-based media, then text alternatives at least provide descriptive identification of the non-text content. (Refer to Guideline 1.2 for additional requirements for media.)"
+              },
+              {
+                "type": "exception",
+                "title": "Test",
+                "description": "If non-text content is a test or exercise that would be invalid if presented in text, then text alternatives at least provide descriptive identification of the non-text content."
+              },
+              {
+                "type": "exception",
+                "title": "Sensory",
+                "description": "If non-text content is primarily intended to create a specific sensory experience, then text alternatives at least provide descriptive identification of the non-text content."
+              },
+              {
+                "type": "exception",
+                "title": "CAPTCHA",
+                "description": "If the purpose of non-text content is to confirm that content is being accessed by a person rather than a computer, then text alternatives that identify and describe the purpose of the non-text content are provided, and alternative forms of CAPTCHA using output modes for different types of sensory perception are provided to accommodate different disabilities."
+              },
+              {
+                "type": "exception",
+                "title": "Decoration, Formatting, Invisible",
+                "description": "If non-text content is pure decoration, is used only for visual formatting, or is not presented to users, then it is implemented in a way that it can be ignored by assistive technology."
+              }
+            ],
+            "notes": null,
+            "references": [
+              {
+                "title": "How to Meet 1.1.1",
+                "url": "https://www.w3.org/WAI/WCAG22/quickref/#non-text-content"
+              },
+              {
+                "title": "Understanding 1.1.1",
+                "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "ref_id": "1.2",
+        "title": "Time-based Media",
+        "description": "Provide alternatives for time-based media.",
+        "url": "https://www.w3.org/TR/WCAG22/#time-based-media",
+        "references": [
+          {
+            "title": "Understanding Guideline 1.2",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/time-based-media.html"
+          }
+        ],
+        "success_criteria": [
+          {
+            "ref_id": "1.2.1",
+            "title": "Audio-only and Video-only (Prerecorded)",
+            "description": "For prerecorded audio-only and prerecorded video-only media, the following are true, except when the audio or video is a media alternative for text and is clearly labeled as such.",
+            "url": "https://www.w3.org/TR/WCAG22/#audio-only-and-video-only-prerecorded",
+            "level": "A",
+            "special_cases": [
+              {
+                "type": "all_true",
+                "title": "Prerecorded Audio-only",
+                "description": "An alternative for time-based media is provided that presents equivalent information for prerecorded audio-only content."
+              },
+              {
+                "type": "all_true",
+                "title": "Prerecorded Video-only",
+                "description": "Either an alternative for time-based media or an audio track is provided that presents equivalent information for prerecorded video-only content."
+              }
+            ],
+            "notes": null,
+            "references": [
+              {
+                "title": "How to Meet 1.2.1",
+                "url": "https://www.w3.org/WAI/WCAG22/quickref/#audio-only-and-video-only-prerecorded"
+              },
+              {
+                "title": "Understanding 1.2.1",
+                "url": "https://www.w3.org/WAI/WCAG22/Understanding/audio-only-and-video-only-prerecorded.html"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
-    "id": 2,
-    "criteria": "1.2.1",
-    "success_criterion_title": "Audio-only and Video-only (Prerecorded)",
-    "level": "A",
-    "requirement": "Provide text transcripts for audio-only and video-only content.",
-    "roles": ["Content Editor"],
-    "version": "2.0"
+    "ref_id": "2",
+    "title": "Operable",
+    "description": "User interface components and navigation must be operable.",
+    "url": "https://www.w3.org/TR/WCAG22/#operable",
+    "guidelines": [
+      {
+        "ref_id": "2.1",
+        "title": "Keyboard Accessible",
+        "description": "Make all functionality available from a keyboard.",
+        "url": "https://www.w3.org/TR/WCAG22/#keyboard-accessible",
+        "references": [
+          {
+            "title": "Understanding Guideline 2.1",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/keyboard-accessible.html"
+          }
+        ],
+        "success_criteria": [
+          {
+            "ref_id": "2.1.1",
+            "title": "Keyboard",
+            "description": "All functionality of the content is operable through a keyboard interface without requiring specific timings for individual keystrokes, except where the underlying function requires input that depends on the path of the user's movement and not just the endpoints.",
+            "url": "https://www.w3.org/TR/WCAG22/#keyboard",
+            "level": "A",
+            "special_cases": null,
+            "notes": [
+              {
+                "content": "This exception relates to the underlying function, not the input technique. For example, if using handwriting to enter text, the input technique (handwriting) requires path-dependent input but the underlying function (text input) does not."
+              },
+              {
+                "content": "This does not forbid and should not discourage providing mouse input or other input methods in addition to keyboard operation."
+              }
+            ],
+            "references": [
+              {
+                "title": "How to Meet 2.1.1",
+                "url": "https://www.w3.org/WAI/WCAG22/quickref/#keyboard"
+              },
+              {
+                "title": "Understanding 2.1.1",
+                "url": "https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ref_id": "3",
+    "title": "Understandable",
+    "description": "Information and the operation of user interface must be understandable.",
+    "url": "https://www.w3.org/TR/WCAG22/#understandable",
+    "guidelines": [
+      {
+        "ref_id": "3.1",
+        "title": "Readable",
+        "description": "Make text content readable and understandable.",
+        "url": "https://www.w3.org/TR/WCAG22/#readable",
+        "references": [
+          {
+            "title": "Understanding Guideline 3.1",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/readable.html"
+          }
+        ],
+        "success_criteria": [
+          {
+            "ref_id": "3.1.1",
+            "title": "Language of Page",
+            "description": "The default human language of each Web page can be programmatically determined.",
+            "url": "https://www.w3.org/TR/WCAG22/#language-of-page",
+            "level": "A",
+            "special_cases": null,
+            "notes": null,
+            "references": [
+              {
+                "title": "How to Meet 3.1.1",
+                "url": "https://www.w3.org/WAI/WCAG22/quickref/#language-of-page"
+              },
+              {
+                "title": "Understanding 3.1.1",
+                "url": "https://www.w3.org/WAI/WCAG22/Understanding/language-of-page.html"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ref_id": "4",
+    "title": "Robust",
+    "description": "Content must be robust enough that it can be interpreted reliably by a wide variety of user agents, including assistive technologies.",
+    "url": "https://www.w3.org/TR/WCAG22/#robust",
+    "guidelines": [
+      {
+        "ref_id": "4.1",
+        "title": "Compatible",
+        "description": "Maximize compatibility with current and future user agents, including assistive technologies.",
+        "url": "https://www.w3.org/TR/WCAG22/#compatible",
+        "references": [
+          {
+            "title": "Understanding Guideline 4.1",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/compatible.html"
+          }
+        ],
+        "success_criteria": [
+          {
+            "ref_id": "4.1.1",
+            "title": "Parsing",
+            "description": "In content implemented using markup languages, elements have complete start and end tags, elements are nested according to their specifications, elements do not contain duplicate attributes, and any IDs are unique, except where the specifications allow these features.",
+            "url": "https://www.w3.org/TR/WCAG22/#parsing",
+            "level": "A",
+            "special_cases": null,
+            "notes": [
+              {
+                "content": "Start and end tags that are missing a critical character in their formation, such as a closing angle bracket or a mismatched attribute value quotation mark are not complete."
+              }
+            ],
+            "references": [
+              {
+                "title": "How to Meet 4.1.1",
+                "url": "https://www.w3.org/WAI/WCAG22/quickref/#parsing"
+              },
+              {
+                "title": "Understanding 4.1.1",
+                "url": "https://www.w3.org/WAI/WCAG22/Understanding/parsing.html"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]
 

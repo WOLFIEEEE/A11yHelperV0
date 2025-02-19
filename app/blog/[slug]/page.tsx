@@ -2,21 +2,14 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, ThumbsUp, Share2, Bookmark, MessageSquare } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import Script from "next/script"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Separator } from "@/components/ui/separator"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 
 const blogPosts = [
   {
     slug: "understanding-wcag-2-2",
     title: "Understanding WCAG 2.2: What's New and How to Prepare",
     date: "2023-07-15",
-    author: "Alice Johnson",
-    authorImage: "/placeholder.svg?height=50&width=50",
     content: `
       <h1>Understanding WCAG 2.2: What's New and How to Prepare</h1>
       <p>The Web Content Accessibility Guidelines (WCAG) 2.2 is set to become the new standard for web accessibility. This update brings several new success criteria and changes to existing ones, aiming to address the evolving landscape of web technologies and user needs.</p>
@@ -44,8 +37,6 @@ const blogPosts = [
     slug: "ai-in-web-accessibility",
     title: "The Role of AI in Improving Web Accessibility",
     date: "2023-07-02",
-    author: "Bob Smith",
-    authorImage: "/placeholder.svg?height=50&width=50",
     content: `
       <h1>The Role of AI in Improving Web Accessibility</h1>
       <p>Artificial Intelligence (AI) is revolutionizing many aspects of web development, and accessibility is no exception. AI-powered tools are making it easier than ever to create, test, and maintain accessible websites.</p>
@@ -91,7 +82,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: `Read about ${post.title} and learn how to improve web accessibility for all users.`,
       type: "article",
       publishedTime: post.date,
-      authors: [post.author],
+      authors: ["A11yHelper Team"],
     },
     twitter: {
       card: "summary_large_image",
@@ -115,8 +106,8 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
     datePublished: post.date,
     dateModified: post.date,
     author: {
-      "@type": "Person",
-      name: post.author,
+      "@type": "Organization",
+      name: "A11yHelper Team",
     },
     publisher: {
       "@type": "Organization",
@@ -134,7 +125,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
   }
 
   return (
-    <div className="container max-w-4xl mx-auto py-12">
+    <div className="container py-12 md:py-24 lg:py-32">
       <Script
         id="blog-post-schema"
         type="application/ld+json"
@@ -145,81 +136,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Blog
         </Link>
       </Button>
-      <article className="prose lg:prose-xl dark:prose-invert mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-3xl sm:text-4xl">{post.title}</CardTitle>
-            <CardDescription>
-              <div className="flex items-center space-x-2">
-                <Avatar>
-                  <AvatarImage src={post.authorImage} alt={post.author} />
-                  <AvatarFallback>
-                    {post.author
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">{post.author}</span>
-                  <span className="text-sm text-muted-foreground">{post.date}</span>
-                </div>
-              </div>
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
-          </CardContent>
-          <CardFooter className="flex justify-between items-center">
-            <div className="flex space-x-2">
-              <Button variant="outline" size="icon">
-                <ThumbsUp className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon">
-                <Share2 className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon">
-                <Bookmark className="h-4 w-4" />
-              </Button>
-            </div>
-            <Button variant="outline">
-              <MessageSquare className="mr-2 h-4 w-4" />
-              Add Comment
-            </Button>
-          </CardFooter>
-        </Card>
-      </article>
-      <Separator className="my-8" />
-      <Card>
-        <CardHeader>
-          <CardTitle>Leave a Comment</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium">
-                  Name
-                </label>
-                <Input id="name" placeholder="Your name" />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">
-                  Email
-                </label>
-                <Input id="email" type="email" placeholder="Your email" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="comment" className="text-sm font-medium">
-                Comment
-              </label>
-              <Textarea id="comment" placeholder="Your comment" rows={4} />
-            </div>
-            <Button type="submit">Post Comment</Button>
-          </form>
-        </CardContent>
-      </Card>
+      <article className="prose lg:prose-xl mx-auto" dangerouslySetInnerHTML={{ __html: post.content }} />
       <div className="text-center mt-12">
         <Button asChild>
           <Link href="/tools">Explore Our Accessibility Tools</Link>

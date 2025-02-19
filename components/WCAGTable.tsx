@@ -1,73 +1,81 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useMemo } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Skeleton } from "@/components/ui/skeleton"
+import Link from "next/link"
+import wcagData from "@/data/wcag-checklist.json"
 
-interface WCAGCriterion {
-  id: number
-  criteria: string
-  success_criterion_title: string
+interface SuccessCriterion {
+  ref_id: string
+  title: string
+  description: string
   level: "A" | "AA" | "AAA"
-  requirement: string
-  roles: string[]
-  version: string
+  url: string
+  wcag_version: string
+  special_cases?: Array<{
+    type: string
+    title: string
+    description?: string
+  }>
+  notes?: Array<{ content: string }>
 }
 
-type SortKey = "criteria" | "success_criterion_title" | "level" | "version"
+interface Guideline {
+  ref_id: string
+  title: string
+  description: string
+  url: string
+  success_criteria: SuccessCriterion[]
+}
 
-export default function WCAGTable() {
-  const [wcagCriteria, setWcagCriteria] = useState<WCAGCriterion[]>([])
+interface Principle {
+  ref_id: string
+  title: string
+  description: string
+  url: string
+  guidelines: Guideline[]
+}
+
+type SortKey = "ref_id" | "title" | "level" | "wcag_version"
+
+export default function WCAGTable({ centerContent = false, hideEmptyWCAGVersion = false }) {
   const [searchTerm, setSearchTerm] = useState("")
   const [levelFilter, setLevelFilter] = useState<"A" | "AA" | "AAA" | "all">("all")
-  const [versionFilter, setVersionFilter] = useState<"2.0" | "2.1" | "2.2" | "all">("all")
-  const [sortKey, setSortKey] = useState<SortKey>("criteria")
+  const [principleFilter, setPrincipleFilter] = useState<string>("all")
+  const [sortKey, setSortKey] = useState<SortKey>("ref_id")
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/wcag-checklist.json")
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        const data = await response.json()
-        setWcagCriteria(data)
-        setLoading(false)
-      } catch (error) {
-        console.error("Error loading WCAG data:", error)
-        setError("Failed to load WCAG data. Please try again later.")
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [])
 
   const filteredAndSortedCriteria = useMemo(() => {
-    return wcagCriteria
+    return wcagData
+      .flatMap((principle) =>
+        principle.guidelines.flatMap((guideline) =>
+          guideline.success_criteria.map((criterion) => ({
+            ...criterion,
+            principle: principle.title,
+            guideline: guideline.title,
+          })),
+        ),
+      )
       .filter((criterion) => {
         const matchesSearch =
-          criterion.success_criterion_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          criterion.requirement.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          criterion.criteria.toLowerCase().includes(searchTerm.toLowerCase())
+          criterion.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          criterion.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          criterion.ref_id.toLowerCase().includes(searchTerm.toLowerCase())
         const matchesLevel = levelFilter === "all" || criterion.level === levelFilter
-        const matchesVersion = versionFilter === "all" || criterion.version === versionFilter
-        return matchesSearch && matchesLevel && matchesVersion
+        const matchesPrinciple = principleFilter === "all" || criterion.principle === principleFilter
+        const matchesWCAGVersion = hideEmptyWCAGVersion || criterion.wcag_version
+        return matchesSearch && matchesLevel && matchesPrinciple && matchesWCAGVersion
       })
       .sort((a, b) => {
         if (a[sortKey] < b[sortKey]) return sortDirection === "asc" ? -1 : 1
         if (a[sortKey] > b[sortKey]) return sortDirection === "asc" ? 1 : -1
         return 0
       })
-  }, [wcagCriteria, searchTerm, levelFilter, versionFilter, sortKey, sortDirection])
+  }, [searchTerm, levelFilter, principleFilter, sortKey, sortDirection, hideEmptyWCAGVersion])
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -76,19 +84,6 @@ export default function WCAGTable() {
       setSortKey(key)
       setSortDirection("asc")
     }
-  }
-
-  if (loading) {
-    return <Skeleton className="w-full h-96" />
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    )
   }
 
   return (
@@ -111,18 +106,17 @@ export default function WCAGTable() {
             <SelectItem value="AAA">Level AAA</SelectItem>
           </SelectContent>
         </Select>
-        <Select
-          value={versionFilter}
-          onValueChange={(value) => setVersionFilter(value as "2.0" | "2.1" | "2.2" | "all")}
-        >
+        <Select value={principleFilter} onValueChange={setPrincipleFilter}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by version" />
+            <SelectValue placeholder="Filter by principle" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Versions</SelectItem>
-            <SelectItem value="2.0">WCAG 2.0</SelectItem>
-            <SelectItem value="2.1">WCAG 2.1</SelectItem>
-            <SelectItem value="2.2">WCAG 2.2</SelectItem>
+            <SelectItem value="all">All Principles</SelectItem>
+            {wcagData.map((principle) => (
+              <SelectItem key={principle.ref_id} value={principle.title}>
+                {principle.title}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -130,37 +124,45 @@ export default function WCAGTable() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">
-                <Button variant="ghost" onClick={() => handleSort("criteria")}>
+              <TableHead className={`w-[100px] ${centerContent ? "text-center" : ""}`}>
+                <Button variant="ghost" onClick={() => handleSort("ref_id")}>
                   Criterion <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead>
-                <Button variant="ghost" onClick={() => handleSort("success_criterion_title")}>
+              <TableHead className={centerContent ? "text-center" : ""}>
+                <Button variant="ghost" onClick={() => handleSort("title")}>
                   Name <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead className="hidden md:table-cell">Requirement</TableHead>
-              <TableHead className="w-[100px]">
+              <TableHead className="hidden md:table-cell">Description</TableHead>
+              <TableHead className={`w-[100px] ${centerContent ? "text-center" : ""}`}>
                 <Button variant="ghost" onClick={() => handleSort("level")}>
                   Level <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead className="w-[100px]">
-                <Button variant="ghost" onClick={() => handleSort("version")}>
-                  Version <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-              </TableHead>
+              {!hideEmptyWCAGVersion && (
+                <TableHead className="w-[120px]">
+                  <Button variant="ghost" onClick={() => handleSort("wcag_version")}>
+                    WCAG Version <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </TableHead>
+              )}
+              <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredAndSortedCriteria.map((criterion) => (
-              <TableRow key={criterion.id}>
-                <TableCell>{criterion.criteria}</TableCell>
-                <TableCell>{criterion.success_criterion_title}</TableCell>
-                <TableCell className="hidden md:table-cell">{criterion.requirement}</TableCell>
-                <TableCell>{criterion.level}</TableCell>
-                <TableCell>{criterion.version}</TableCell>
+              <TableRow key={criterion.ref_id}>
+                <TableCell className={centerContent ? "text-center" : ""}>{criterion.ref_id}</TableCell>
+                <TableCell className={centerContent ? "text-center" : ""}>{criterion.title}</TableCell>
+                <TableCell className="hidden md:table-cell">{criterion.description}</TableCell>
+                <TableCell className={centerContent ? "text-center" : ""}>{criterion.level}</TableCell>
+                {!hideEmptyWCAGVersion && <TableCell>{criterion.wcag_version}</TableCell>}
+                <TableCell>
+                  <Link href={`/wcag/${criterion.ref_id}`} passHref>
+                    <Button variant="outline">Explore</Button>
+                  </Link>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
